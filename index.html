@@ -1,18 +1,614 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <meta charset='utf-8'>
-    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-    <title>Page Title</title>
-    <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
-    <script src='main.js'></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proyecto Futurista - Portfolio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        /* Cursor personalizado */
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #00fff2;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: 0.1s;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 20px #00fff2;
+        }
+
+        .cursor-follower {
+            width: 40px;
+            height: 40px;
+            border: 1px solid rgba(0, 255, 242, 0.3);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            transition: 0.3s;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Fondo animado */
+        .background {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .grid {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 242, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 242, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+            perspective: 1000px;
+            transform: rotateX(60deg) translateZ(-100px);
+        }
+
+        @keyframes gridMove {
+            0% { transform: rotateX(60deg) translateZ(-100px) translateY(0); }
+            100% { transform: rotateX(60deg) translateZ(-100px) translateY(50px); }
+        }
+
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #00fff2;
+            border-radius: 50%;
+            animation: float 10s infinite;
+            box-shadow: 0 0 10px #00fff2;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(-100vh) translateX(50px); opacity: 0; }
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            width: 100%;
+            padding: 30px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            background: rgba(10, 10, 10, 0.3);
+            border-bottom: 1px solid rgba(0, 255, 242, 0.1);
+        }
+
+        .logo {
+        font-size: 24px;
+        font-weight: bold;
+        background: linear-gradient(45deg, #00fff2, #ff00ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        -moz-background-clip: text;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+     }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            margin-left: 30px;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            transition: 0.3s;
+        }
+
+        nav a:hover {
+            color: #00fff2;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #00fff2;
+            transition: 0.3s;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 10;
+            max-width: 800px;
+            padding: 0 20px;
+        }
+
+        .hero h1 {
+        font-size: 80px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        background: linear-gradient(45deg, #00fff2, #ff00ff, #00fff2);
+        background-size: 200% auto;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        -moz-background-clip: text;
+        animation: gradient 3s linear infinite;
+        text-transform: uppercase;
+        letter-spacing: 5px;
+        }
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+
+        .hero p {
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 15px 40px;
+            background: transparent;
+            border: 2px solid #00fff2;
+            color: #00fff2;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            overflow: hidden;
+            transition: 0.3s;
+            font-weight: bold;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: #00fff2;
+            transition: 0.3s;
+            z-index: -1;
+        }
+
+        .cta-button:hover::before {
+            left: 0;
+        }
+
+        .cta-button:hover {
+            color: #0a0a0a;
+            box-shadow: 0 0 30px #00fff2;
+        }
+
+        /* Proyecto Section */
+        .project-section {
+            min-height: 100vh;
+            padding: 100px 50px;
+            position: relative;
+        }
+
+        .project-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+        font-size: 50px;
+        text-align: center;
+        margin-bottom: 80px;
+        background: linear-gradient(45deg, #00fff2, #ff00ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        -moz-background-clip: text;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        }
+
+        .project-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(0, 255, 242, 0.2);
+            border-radius: 20px;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            transition: 0.5s;
+            position: relative;
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            border-color: #00fff2;
+            box-shadow: 0 20px 60px rgba(0, 255, 242, 0.3);
+        }
+
+        .project-image {
+            width: 100%;
+            height: 400px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-image::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .project-info {
+            padding: 40px;
+        }
+
+        .project-info h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: #00fff2;
+        }
+
+        .project-info p {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .tech-tag {
+            padding: 8px 20px;
+            background: rgba(0, 255, 242, 0.1);
+            border: 1px solid #00fff2;
+            border-radius: 20px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #00fff2;
+        }
+
+        .project-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .project-link {
+            padding: 12px 30px;
+            background: transparent;
+            border: 2px solid #00fff2;
+            color: #00fff2;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: 0.3s;
+            display: inline-block;
+            font-size: 14px;
+        }
+
+        .project-link:hover {
+            background: #00fff2;
+            color: #0a0a0a;
+            box-shadow: 0 0 20px #00fff2;
+        }
+
+        /* Footer */
+        footer {
+            padding: 50px;
+            text-align: center;
+            border-top: 1px solid rgba(0, 255, 242, 0.1);
+            background: rgba(10, 10, 10, 0.5);
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+
+        .social-links a {
+            width: 50px;
+            height: 50px;
+            border: 2px solid #00fff2;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #00fff2;
+            text-decoration: none;
+            transition: 0.3s;
+            font-size: 20px;
+        }
+
+        .social-links a:hover {
+            background: #00fff2;
+            color: #0a0a0a;
+            box-shadow: 0 0 20px #00fff2;
+            transform: translateY(-5px);
+        }
+
+        footer p {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 14px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 40px;
+            }
+
+            .hero p {
+                font-size: 16px;
+            }
+
+            header {
+                padding: 20px;
+            }
+
+            nav a {
+                margin-left: 15px;
+                font-size: 12px;
+            }
+
+            .project-section {
+                padding: 50px 20px;
+            }
+
+            .section-title {
+                font-size: 30px;
+            }
+        }
+
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 50px;
+            border: 2px solid #00fff2;
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            padding-top: 8px;
+        }
+
+        .scroll-indicator::before {
+            content: '';
+            width: 4px;
+            height: 10px;
+            background: #00fff2;
+            border-radius: 2px;
+            animation: scroll 2s infinite;
+        }
+
+        @keyframes scroll {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(20px); opacity: 0; }
+        }
+    </style>
 </head>
 <body>
+    <!-- Cursor personalizado -->
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
 
-    <H1>Hola Mundo!!</H1>
+    <!-- Fondo animado -->
+    <div class="background">
+        <div class="grid"></div>
+        <div class="particles" id="particles"></div>
+    </div>
 
+    <!-- Header -->
+    <header>
+        <div class="logo">NEXUS</div>
+        <nav>
+            <a href="#home">Inicio</a>
+            <a href="#project">Proyecto</a>
+            <a href="#contact">Contacto</a>
+        </nav>
+    </header>
 
-    
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>El Futuro es Ahora</h1>
+            <p>Descubre el proyecto que redefine los límites de la innovación tecnológica. Una experiencia inmersiva que transforma la realidad digital.</p>
+            <a href="#project" class="cta-button">Explorar Proyecto</a>
+        </div>
+        <div class="scroll-indicator"></div>
+    </section>
+
+    <!-- Project Section -->
+    <section class="project-section" id="project">
+        <div class="project-container">
+            <h2 class="section-title">Proyecto Destacado</h2>
+            <div class="project-card">
+                <div class="project-image">
+                    <!-- Aquí puedes agregar una imagen real -->
+                </div>
+                <div class="project-info">
+                    <h2>NeuroLink AI Platform</h2>
+                    <p>
+                        Una plataforma revolucionaria de inteligencia artificial que integra machine learning avanzado 
+                        con interfaces de usuario inmersivas. Diseñada para transformar la manera en que las empresas 
+                        interactúan con los datos, ofreciendo análisis predictivos en tiempo real con visualizaciones 
+                        3D interactivas y un sistema de recomendaciones adaptativo.
+                    </p>
+                    <div class="tech-stack">
+                        <span class="tech-tag">React</span>
+                        <span class="tech-tag">Three.js</span>
+                        <span class="tech-tag">Node.js</span>
+                        <span class="tech-tag">TensorFlow</span>
+                        <span class="tech-tag">WebGL</span>
+                        <span class="tech-tag">MongoDB</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="#" class="project-link">Ver Demo</a>
+                        <a href="#" class="project-link">Código</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="social-links">
+            <a href="#" aria-label="GitHub">GH</a>
+            <a href="#" aria-label="LinkedIn">IN</a>
+            <a href="#" aria-label="Twitter">TW</a>
+            <a href="#" aria-label="Email">@</a>
+        </div>
+        <p>&copy; 2025 NEXUS Portfolio. Diseñado para el futuro.</p>
+    </footer>
+
+    <script>
+        // Cursor personalizado
+        const cursor = document.querySelector('.cursor');
+        const cursorFollower = document.querySelector('.cursor-follower');
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+            
+            setTimeout(() => {
+                cursorFollower.style.left = e.clientX + 'px';
+                cursorFollower.style.top = e.clientY + 'px';
+            }, 100);
+        });
+
+        // Efecto hover en enlaces
+        const links = document.querySelectorAll('a, .cta-button, .project-link');
+        links.forEach(link => {
+            link.addEventListener('mouseenter', () => {
+                cursor.style.transform = 'translate(-50%, -50%) scale(1.5)';
+                cursorFollower.style.transform = 'translate(-50%, -50%) scale(1.5)';
+            });
+            
+            link.addEventListener('mouseleave', () => {
+                cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+                cursorFollower.style.transform = 'translate(-50%, -50%) scale(1)';
+            });
+        });
+
+        // Crear partículas
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 50; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 10 + 's';
+            particle.style.animationDuration = (Math.random() * 10 + 5) + 's';
+            particlesContainer.appendChild(particle);
+        }
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Animación al scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.project-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(50px)';
+            card.style.transition = 'all 0.8s ease-out';
+            observer.observe(card);
+        });
+
+        // Efecto parallax en hero
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const heroContent = document.querySelector('.hero-content');
+            if (heroContent) {
+                heroContent.style.transform = `translateY(${scrolled * 0.5}px)`;
+                heroContent.style.opacity = 1 - (scrolled / 500);
+            }
+        });
+    </script>
 </body>
 </html>
